@@ -23,7 +23,7 @@
 | nomad_region | Define the name of Nomad region | string | "global" | no
 | authoritative_region | Define the name of Nomad authoritative region | string | "global" | no
 | retry_join | Used by Nomad to automatically form a cluster | string | "provider=aws tag_key=nomad-node tag_value=server" | no
-| secure_gossip | Used by Nomad to enable gossip encryption | string | "cg8StVXbQJ0gPvMd9o7yrg==" | no
+| secure_gossip | Used on Nomad server instances only to enable gossip encryption | string | "null" | yes
 | domain_name | The name of subdomain | string | "mynomad" | no
 | zone_name | The name of DNS domain | string | "ntry.site" | no
 
@@ -39,7 +39,7 @@
 ## Consume
 
 ```
-// ************* GLOBAL Part ************* //
+// Generates private Certificate Authority (CA) and issue certificates for nomad servers, clients and 
 
 resource "null_resource" "generate_self_ca" {
   provisioner "local-exec" {
@@ -67,7 +67,7 @@ module "aws-nomad_server" {
   nomad_region         = "global"
   authoritative_region = "global"
   dc                   = "dc1"
-  ami                  = "ami-0ac8c1373dae0f3e5"
+  ami                  = "ami-0ac8c1373dae0f3e5" # Nomad server AWS AMI in us-east-1
   instance_type        = "t2.micro"
   public_key           = "a_public_key"
   domain_name          = "mynomad"
@@ -89,7 +89,7 @@ module "aws-nomad_client" {
   subnet_id            = "aws_subnet_id"
   nomad_region         = "global"
   dc                   = "dc1"
-  ami                  = "ami-02ffa51d963317aaf"
+  ami                  = "ami-02ffa51d963317aaf" # Nomad client AWS AMI in us-east-1
   instance_type        = "t2.micro"
   public_key           = "a_public_key"
   domain_name          = "mynomad"
