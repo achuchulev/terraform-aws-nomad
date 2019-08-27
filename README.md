@@ -39,7 +39,7 @@
 ## Consume
 
 ```
-// Generates private Certificate Authority (CA) and issue certificates for nomad servers, clients and 
+// Generate private Certificate Authority (CA) and issue certificates for Nomad nodes
 
 resource "null_resource" "generate_self_ca" {
   provisioner "local-exec" {
@@ -48,6 +48,7 @@ resource "null_resource" "generate_self_ca" {
   }
 }
 
+// Generate 16 bytes, base64 encoded cryptographically suitable key to enable gossip encryption on Nomad servers
 resource "random_id" "server_gossip" {
   byte_length = 16
 }
