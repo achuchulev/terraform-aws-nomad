@@ -34,16 +34,8 @@ variable "ami" {
   default     = "ami-0ac8c1373dae0f3e5"
 }
 
-variable "icmp_cidr" {
-  default = "0.0.0.0/0"
-}
-
-variable "ssh_cidr" {
-  default = "0.0.0.0/0"
-}
-
-variable "nomad_cidr" {
-  default = "0.0.0.0/0"
+variable "sg_ids {
+  type = list(string)
 }
 
 variable "role_name" {
