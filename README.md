@@ -27,6 +27,9 @@
 | subnet_id | AWS VPC subnet id | string | - | yes
 | availability_zone | AZ id of the AWS VPC subnet | string | - | yes
 | sg_ids | List of AWS Security groups | list | - | yes
+| icmp_cidr | CIDR block to allow ICMP | string | - | no
+| ssh_cidr | CIDR block to allow ssh | string | - | no
+| nomad_cidr | CIDR block to allow nomad traffic | string | - | no
 | ami | Nomad server or client AWS AMI | string | "ami-0ac8c1373dae0f3e5" | no
 | public_key | A public key used by AWS to generates key pairs for instances | string | - | yes
 | role_name | Name for IAM role that allows Nomad cloud auto join | string | "nomad-cloud-auto-join-aws" | no
