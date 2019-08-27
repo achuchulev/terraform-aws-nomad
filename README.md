@@ -32,6 +32,6 @@
 
 | Name  |	Description 
 | ----- | ----------- 
-| nomad_ui_sockets | Nomad instances WEB UI sockets to provide to frontend
 | instance_tags  | Nomad instances tags
+| nomad_ui_sockets | Nomad instances WEB UI sockets to provide to frontend
 | private_ips  | Nomad instances private ips
