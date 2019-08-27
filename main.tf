@@ -61,7 +61,7 @@ resource "aws_instance" "nomad_instance" {
   instance_type               = var.instance_type
   availability_zone           = var.availability_zone
   subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = [var.sg_ids]
+  vpc_security_group_ids      = ["${var.sg_ids}"]
   iam_instance_profile        = aws_iam_instance_profile.nomad.id
   key_name                    = aws_key_pair.my_key.id
   associate_public_ip_address = "false"
