@@ -35,3 +35,64 @@
 | instance_tags  | Nomad instances tags
 | nomad_ui_sockets | Nomad instances WEB UI sockets to provide to frontend
 | private_ips  | Nomad instances private ips
+
+## Consume
+
+```
+// ************* GLOBAL Part ************* //
+
+resource "null_resource" "generate_self_ca" {
+  provisioner "local-exec" {
+    # script called with private_ips of nomad backend servers
+    command = "${path.root}/scripts/gen_self_ca.sh ${var.nomad_region}"
+  }
+}
+
+resource "random_id" "server_gossip" {
+  byte_length = 16
+}
+
+// Module that creates Nomad server instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
+module "aws-nomad_server" {
+  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+
+  access_key           = "aws_access_key"
+  secret_key           = "aws_secret_key"
+  region               = "us-east-1"
+  instance_role        = "server"
+  nomad_instance_count = "3"
+  aws_vpc_id           = "aws_vpc_id"
+  availability_zone    = "aws_az_id"
+  subnet_id            = "aws_subnet_id"
+  nomad_region         = "global"
+  authoritative_region = "global"
+  dc                   = "dc1"
+  ami                  = "ami-0ac8c1373dae0f3e5"
+  instance_type        = "t2.micro"
+  public_key           = "a_public_key"
+  domain_name          = "mynomad"
+  zone_name            = "example.com"
+  secure_gossip        = "cg8StVXbQJ0gPvMd9o7yrg=="
+}
+
+// Module that creates Nomad client instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
+module "aws-nomad_client" {
+  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+
+  access_key           = "aws_access_key"
+  secret_key           = "aws_secret_key"
+  region               = "us-east-1"
+  instance_role        = "client"
+  nomad_instance_count = "1"
+  aws_vpc_id           = "aws_vpc_id"
+  availability_zone    = "aws_az_id"
+  subnet_id            = "aws_subnet_id"
+  nomad_region         = "global"
+  dc                   = "dc1"
+  ami                  = "ami-02ffa51d963317aaf"
+  instance_type        = "t2.micro"
+  public_key           = "a_public_key"
+  domain_name          = "mynomad"
+  zone_name            = "example.com"
+}
+```
