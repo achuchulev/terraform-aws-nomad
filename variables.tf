@@ -76,7 +76,7 @@ variable "retry_join" {
 
 variable "secure_gossip" {
   description = "Used by Nomad to enable gossip encryption"
-  default     = "cg8StVXbQJ0gPvMd9o7yrg=="
+  default     = "null"
 }
 
 // Cloudflare VARs
