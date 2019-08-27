@@ -1,5 +1,26 @@
 # Terraform module to create Nomad (clients|servers) instances on AWS
 
+## Prerequisites
+
+- git
+- terraform (>=0.12)
+- AWS subscription
+- ssh key
+- Use pre-built nomad server and/or client AWS AMIs or bake your own using [Packer](https://www.packer.io)
+- VPN connection with AWS to access AWS EC2 instances on their private IPs
+- cfssl (Cloudflare's PKI and TLS toolkit)
+
+## How to deploy
+
+- Get the repo
+
+```
+git clone https://github.com/achuchulev/terraform-aws-nomad_instance.git
+cd terraform-aws-nomad_instance
+```
+
+- Create `terraform.tfvars` file
+
 ## Inputs
 
 | Name  |	Description |	Type |  Default |	Required
@@ -27,7 +48,26 @@
 | domain_name | The name of subdomain | string | "mynomad" | no
 | zone_name | The name of DNS domain | string | "ntry.site" | no
 
+- Initialize terraform
 
+```
+terraform init
+```
+
+- Deploy instances
+
+```
+terraform plan
+terraform apply
+```
+- `Terraform apply` will:
+  - generate private Certificate Authority (CA)
+  - issue selfsigned certificates for Nomad nodes
+  - generate 16 bytes, base64 encoded cryptographically suitable key for gossip encryption on Nomad servers
+  - create new instances into the specified AWS region for server/client
+  - copy nomad configuration files
+  - bootstrap Nomad cluster
+  
 ## Outputs
 
 | Name  |	Description 
@@ -35,6 +75,17 @@
 | instance_tags  | Nomad instances tags
 | nomad_ui_sockets | Nomad instances WEB UI sockets to provide to frontend
 | private_ips  | Nomad instances private ips
+
+## Access Nomad
+
+#### via CLI
+
+ssh to some Nomad node and run for example:
+
+```
+$ nomad node status
+$ nomad server members
+```
 
 ## Consume
 
