@@ -1,111 +1,10 @@
-// Generates random name for instances
+// Generates Random Name for Instances
 resource "random_pet" "random_name" {
   length    = "4"
   separator = "-"
 }
 
-// Creates security groups that allow all ports needed for Nomad
-resource "aws_security_group" "allow_nomad_traffic_sg" {
-  name        = "allow_nomad_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
-
-  // nomad
-  ingress {
-    from_port   = "4646"
-    to_port     = "4648"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.nomad_cidr}"]
-  }
-
-  ingress {
-    from_port   = "4648"
-    to_port     = "4648"
-    protocol    = "udp"
-    cidr_blocks = ["${var.nomad_cidr}"]
-  }
-
-  # ingress {
-  #   from_port   = "443"
-  #   to_port     = "443"
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["${var.nomad_cidr}"]
-  # }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_traffic"
-  }
-}
-
-resource "aws_security_group" "allow_nomad_icmp_traffic" {
-  name        = "allow_nomad_icmp_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
-
-  // Custom ICMP Rule - IPv4 Echo Reply
-  ingress {
-    from_port   = "0"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["${var.icmp_cidr}"]
-  }
-
-  // Custom ICMP Rule - IPv4 Echo Request
-  ingress {
-    from_port   = "8"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["${var.icmp_cidr}"]
-  }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_icmp_traffic"
-  }
-}
-
-resource "aws_security_group" "allow_nomad_ssh_traffic" {
-  name        = "allow_nomad_ssh_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
-
-  // ssh
-  ingress {
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = ["${var.ssh_cidr}"]
-  }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_ssh_traffic"
-  }
-}
-
-// Generates AWS key pairs for instances
+// Generates AWS Key Pairs for Instances
 resource "aws_key_pair" "my_key" {
   key_name   = "key-${random_pet.random_name.id}"
   public_key = var.public_key
@@ -162,7 +61,7 @@ resource "aws_instance" "nomad_instance" {
   instance_type               = var.instance_type
   availability_zone           = var.availability_zone
   subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = [aws_security_group.allow_nomad_traffic_sg.id, aws_security_group.allow_nomad_icmp_traffic.id, aws_security_group.allow_nomad_ssh_traffic.id]
+  vpc_security_group_ids      = [var.sg_ids]
   iam_instance_profile        = aws_iam_instance_profile.nomad.id
   key_name                    = aws_key_pair.my_key.id
   associate_public_ip_address = "false"

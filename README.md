@@ -26,9 +26,7 @@
 | aws_vpc_id | AWS VPC id | string | - | yes
 | subnet_id | AWS VPC subnet id | string | - | yes
 | availability_zone | AZ id of the AWS VPC subnet | string | - | yes
-| icmp_cidr | CIDR block to allow ICMP | string | - | no
-| ssh_cidr | CIDR block to allow ssh | string | - | no
-| nomad_cidr | CIDR block to allow nomad traffic | string | - | no
+| sg_ids | List of AWS Security groups | list | - | yes
 | ami | Nomad server or client AWS AMI | string | "ami-0ac8c1373dae0f3e5" | no
 | public_key | A public key used by AWS to generates key pairs for instances | string | - | yes
 | role_name | Name for IAM role that allows Nomad cloud auto join | string | "nomad-cloud-auto-join-aws" | no
@@ -51,13 +49,107 @@
 resource "null_resource" "generate_self_ca" {
   provisioner "local-exec" {
     # script called with private_ips of nomad backend servers
-    command = "${path.root}/scripts/gen_self_ca.sh ${var.nomad_region}"
+    command = "${path.root}/.terraform/modules/aws-nomad_server/scripts/gen_self_ca.sh ${var.nomad_region}" 
   }
 }
 
 // Generate 16 bytes, base64 encoded cryptographically suitable key to enable gossip encryption on Nomad servers
 resource "random_id" "server_gossip" {
   byte_length = 16
+}
+
+// Creates security groups that allow all ports needed for Nomad
+resource "aws_security_group" "allow_nomad_traffic_sg" {
+  name        = "allow_nomad_traffic_sg"
+  description = "Allow traffic needed for Nomad"
+  vpc_id      = var.aws_vpc_id
+
+  // nomad
+  ingress {
+    from_port   = "4646"
+    to_port     = "4648"
+    protocol    = "tcp"
+    cidr_blocks = ["${var.nomad_cidr}"]
+  }
+
+  ingress {
+    from_port   = "4648"
+    to_port     = "4648"
+    protocol    = "udp"
+    cidr_blocks = ["${var.nomad_cidr}"]
+  }
+
+  // all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_nomad_traffic"
+  }
+}
+
+resource "aws_security_group" "allow_nomad_icmp_traffic" {
+  name        = "allow_nomad_icmp_traffic_sg"
+  description = "Allow traffic needed for Nomad"
+  vpc_id      = var.aws_vpc_id
+
+  // Custom ICMP Rule - IPv4 Echo Reply
+  ingress {
+    from_port   = "0"
+    to_port     = "-1"
+    protocol    = "icmp"
+    cidr_blocks = ["${var.icmp_cidr}"]
+  }
+
+  // Custom ICMP Rule - IPv4 Echo Request
+  ingress {
+    from_port   = "8"
+    to_port     = "-1"
+    protocol    = "icmp"
+    cidr_blocks = ["${var.icmp_cidr}"]
+  }
+
+  // all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_nomad_icmp_traffic"
+  }
+}
+
+resource "aws_security_group" "allow_nomad_ssh_traffic" {
+  name        = "allow_nomad_ssh_traffic_sg"
+  description = "Allow traffic needed for Nomad"
+  vpc_id      = var.aws_vpc_id
+
+  // ssh
+  ingress {
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = ["${var.ssh_cidr}"]
+  }
+
+  // all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_nomad_ssh_traffic"
+  }
 }
 
 // Module that creates Nomad server instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
@@ -72,6 +164,7 @@ module "aws-nomad_server" {
   aws_vpc_id           = "aws_vpc_id"
   availability_zone    = "aws_az_id"
   subnet_id            = "aws_subnet_id"
+  sg_ids               = [aws_security_group.allow_nomad_traffic_sg.id,aws_security_group.allow_nomad_icmp_traffic.id,aws_security_group.allow_nomad_ssh_traffic.id]
   nomad_region         = "global"
   authoritative_region = "global"
   dc                   = "dc1"
@@ -95,6 +188,7 @@ module "aws-nomad_client" {
   aws_vpc_id           = "aws_vpc_id"
   availability_zone    = "aws_az_id"
   subnet_id            = "aws_subnet_id"
+  sg_ids               = [aws_security_group.allow_nomad_traffic_sg.id,aws_security_group.allow_nomad_icmp_traffic.id,aws_security_group.allow_nomad_ssh_traffic.id]
   nomad_region         = "global"
   dc                   = "dc1"
   ami                  = "ami-02ffa51d963317aaf" # Nomad client AWS AMI in us-east-1
