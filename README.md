@@ -27,9 +27,6 @@
 | subnet_id | AWS VPC subnet id | string | - | yes
 | availability_zone | AZ id of the AWS VPC subnet | string | - | yes
 | sg_ids | List of AWS Security groups | list | - | yes
-| icmp_cidr | CIDR block to allow ICMP | string | - | no
-| ssh_cidr | CIDR block to allow ssh | string | - | no
-| nomad_cidr | CIDR block to allow nomad traffic | string | - | no
 | ami | Nomad server or client AWS AMI | string | "ami-0ac8c1373dae0f3e5" | no
 | public_key | A public key used by AWS to generates key pairs for instances | string | - | yes
 | role_name | Name for IAM role that allows Nomad cloud auto join | string | "nomad-cloud-auto-join-aws" | no
@@ -72,14 +69,14 @@ resource "aws_security_group" "allow_nomad_traffic_sg" {
     from_port   = "4646"
     to_port     = "4648"
     protocol    = "tcp"
-    cidr_blocks = ["${var.nomad_cidr}"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     from_port   = "4648"
     to_port     = "4648"
     protocol    = "udp"
-    cidr_blocks = ["${var.nomad_cidr}"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   // all outbound traffic
@@ -105,7 +102,7 @@ resource "aws_security_group" "allow_nomad_icmp_traffic" {
     from_port   = "0"
     to_port     = "-1"
     protocol    = "icmp"
-    cidr_blocks = ["${var.icmp_cidr}"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   // Custom ICMP Rule - IPv4 Echo Request
@@ -113,7 +110,7 @@ resource "aws_security_group" "allow_nomad_icmp_traffic" {
     from_port   = "8"
     to_port     = "-1"
     protocol    = "icmp"
-    cidr_blocks = ["${var.icmp_cidr}"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   // all outbound traffic
@@ -139,7 +136,7 @@ resource "aws_security_group" "allow_nomad_ssh_traffic" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-    cidr_blocks = ["${var.ssh_cidr}"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   // all outbound traffic
