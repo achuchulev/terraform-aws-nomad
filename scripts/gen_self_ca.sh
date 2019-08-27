@@ -16,12 +16,6 @@ which cfssl cfssljson &>/dev/null || {
 echo "Generating selfsigned SSL Certificate for Nomad cluster...."
 
 mkdir -p ssl/nomad/$1
-mkdir -p ssl/nomad/$2
-mkdir -p ssl/nomad/$3
 
 # Generate the CA's private key and certificate
 cfssl print-defaults csr | cfssl gencert -initca - | cfssljson -bare ssl/nomad/$1/nomad-ca
-
-# Copy certificates to each nomad location
-cp -R ssl/nomad/$1/ ssl/nomad/$2/
-cp -R ssl/nomad/$1/ ssl/nomad/$3/
