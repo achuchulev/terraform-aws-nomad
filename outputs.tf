@@ -1,8 +1,8 @@
-# output "instance_public_ip" {
-#   value = aws_instance.nomad_instance.*.public_ip
-# }
+output "private_ips" {
+  value = aws_instance.nomad_instance.*.private_ip
+}
 
-output "instance_private_ip" {
+output "nomad_ui_sockets" {
   value = formatlist(
     "%s %s:%s;",
     "server",
@@ -11,15 +11,6 @@ output "instance_private_ip" {
   )
 }
 
-output "private_ips" {
-  value = aws_instance.nomad_instance.*.private_ip
-}
-
-# output "instance_public_dns" {
-#   value = aws_instance.nomad_instance.*.public_dns
-# }
-
 output "instance_tags" {
   value = aws_instance.nomad_instance.*.tags
 }
-

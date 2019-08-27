@@ -1,5 +1,4 @@
-// Provider vars
-
+// Provider VARs
 variable "access_key" {}
 
 variable "secret_key" {}
@@ -8,8 +7,7 @@ variable "region" {
   default = "us-east-1"
 }
 
-// Nomad instance vars
-
+// Nomad EC2 Instances VARs
 variable "nomad_instance_count" {
   default = "3"
 }
@@ -27,7 +25,9 @@ variable "subnet_id" {}
 
 variable "availability_zone" {}
 
-variable "instance_type" {}
+variable "instance_type" {
+  default = "t2.micro"
+}
 
 variable "ami" {
   description = "Ubuntu Xenial Nomad Server AMI in AWS us-east-1 region"
@@ -70,7 +70,7 @@ variable "authoritative_region" {
 }
 
 variable "retry_join" {
-  description = "Used by Nomad to automatically form a cluster."
+  description = "Used by Nomad to automatically form a cluster"
   default     = "provider=aws tag_key=nomad-node tag_value=server"
 }
 
@@ -79,11 +79,13 @@ variable "secure_gossip" {
   default     = "cg8StVXbQJ0gPvMd9o7yrg=="
 }
 
-// Cloudflare vars
+// Cloudflare VARs
 variable "zone_name" {
-  description = "The name of DNS domain, for example 'nomad.com'"
+  description = "The name of DNS domain"
+  default = "ntry.site"
 }
 
 variable "domain_name" {
-  description = "The name of subnomain, for example 'mynomad'"
+  description = "The name of subdomain"
+  default = "mynomad"
 }
