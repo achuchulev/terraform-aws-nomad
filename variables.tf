@@ -34,7 +34,9 @@ variable "ami" {
   default     = "ami-0ac8c1373dae0f3e5"
 }
 
-variable "sg_ids" {}
+variable "sg_ids" {
+   type    = list(string)
+}
 
 variable "role_name" {
   description = "Name for IAM role that allows Nomad cloud auto join"
