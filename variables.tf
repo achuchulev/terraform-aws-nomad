@@ -35,7 +35,7 @@ variable "ami" {
 }
 
 variable "sg_ids {
-  type = list(string)
+  type  = list
 }
 
 variable "role_name" {
