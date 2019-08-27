@@ -49,7 +49,7 @@
 resource "null_resource" "generate_self_ca" {
   provisioner "local-exec" {
     # script called with private_ips of nomad backend servers
-    command = "${path.root}/scripts/gen_self_ca.sh ${var.nomad_region}"
+    command = "${path.root}/.terraform/modules/aws-nomad_server/scripts/gen_self_ca.sh ${var.nomad_region}" 
   }
 }
 
