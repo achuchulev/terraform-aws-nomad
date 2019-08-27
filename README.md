@@ -1,4 +1,4 @@
-# Terraform module to create nomad instances (clients|servers) on AWS
+# Terraform module to create Nomad (clients|servers) instances on AWS
 
 ## Inputs
 
