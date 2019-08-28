@@ -1,3 +1,5 @@
+cat <<EOF > /etc/nomad.d/nomad.hcl
+
 data_dir  = "/opt/nomad"
 
 region = "$1"
@@ -31,3 +33,4 @@ tls {
   verify_server_hostname = true
   verify_https_client    = true
 }
+EOF
