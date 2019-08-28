@@ -87,7 +87,7 @@ module "aws-nomad_server" {
   public_key           = "a_public_key"
   domain_name          = "mynomad"
   zone_name            = "example.com"
-  secure_gossip        = "cg8StVXbQJ0gPvMd9o7yrg=="
+  secure_gossip        = random_id.server_gossip.id
 }
 
 // Module that creates Nomad client instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
