@@ -59,7 +59,6 @@ resource "aws_instance" "nomad_instance" {
   count                       = var.nomad_instance_count
   ami                         = var.ami
   instance_type               = var.instance_type
-  availability_zone           = var.availability_zone
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.sg_ids
   iam_instance_profile        = aws_iam_instance_profile.nomad.id
