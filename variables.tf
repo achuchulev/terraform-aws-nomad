@@ -23,8 +23,6 @@ variable "aws_vpc_id" {}
 
 variable "subnet_id" {}
 
-variable "availability_zone" {}
-
 variable "instance_type" {
   default = "t2.micro"
 }

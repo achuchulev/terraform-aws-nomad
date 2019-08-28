@@ -7,7 +7,6 @@
 - AWS subscription
 - ssh key
 - Use pre-built nomad server and/or client AWS AMIs or bake your own using [Packer](https://www.packer.io)
-- VPN connection with AWS to access AWS EC2 instances on their private IPs
 - cfssl (Cloudflare's PKI and TLS toolkit)
 
 ## Consume
@@ -25,7 +24,6 @@
 | instance_type | EC2 instance type | string | "t2.micro" | no
 | aws_vpc_id | AWS VPC id | string | - | yes
 | subnet_id | AWS VPC subnet id | string | - | yes
-| availability_zone | AZ id of the AWS VPC subnet | string | - | yes
 | sg_ids | List of AWS Security groups | list | - | yes
 | ami | Nomad server or client AWS AMI | string | "ami-0ac8c1373dae0f3e5" | no
 | public_key | A public key used by AWS to generates key pairs for instances | string | - | yes
@@ -58,98 +56,14 @@ resource "random_id" "server_gossip" {
   byte_length = 16
 }
 
-// Creates security groups that allow all ports needed for Nomad
-resource "aws_security_group" "allow_nomad_traffic_sg" {
-  name        = "allow_nomad_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
+// Module that creates security groups on AWS to allow traffic needed for Nomad server|client
+module "aws-nomad_security_groups" {
+  source = "git@github.com:achuchulev/terraform-aws-nomad_security_groups.git"
 
-  // nomad
-  ingress {
-    from_port   = "4646"
-    to_port     = "4648"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = "4648"
-    to_port     = "4648"
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_traffic"
-  }
-}
-
-resource "aws_security_group" "allow_nomad_icmp_traffic" {
-  name        = "allow_nomad_icmp_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
-
-  // Custom ICMP Rule - IPv4 Echo Reply
-  ingress {
-    from_port   = "0"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // Custom ICMP Rule - IPv4 Echo Request
-  ingress {
-    from_port   = "8"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_icmp_traffic"
-  }
-}
-
-resource "aws_security_group" "allow_nomad_ssh_traffic" {
-  name        = "allow_nomad_ssh_traffic_sg"
-  description = "Allow traffic needed for Nomad"
-  vpc_id      = var.aws_vpc_id
-
-  // ssh
-  ingress {
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "allow_nomad_ssh_traffic"
-  }
+  access_key           = "aws_access_key"
+  secret_key           = "aws_secret_key"
+  region               = "us-east-1"
+  aws_vpc_id           = "aws_vpc_id"
 }
 
 // Module that creates Nomad server instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
@@ -164,7 +78,7 @@ module "aws-nomad_server" {
   aws_vpc_id           = "aws_vpc_id"
   availability_zone    = "aws_az_id"
   subnet_id            = "aws_subnet_id"
-  sg_ids               = [aws_security_group.allow_nomad_traffic_sg.id,aws_security_group.allow_nomad_icmp_traffic.id,aws_security_group.allow_nomad_ssh_traffic.id]
+  sg_ids               = [module.aws-nomad_security_groups.security_group_nomad_traffic,module.aws-nomad_security_groups.security_group_ssh_traffic,module.aws-nomad_security_groups.security_group_icmp_traffic]
   nomad_region         = "global"
   authoritative_region = "global"
   dc                   = "dc1"
