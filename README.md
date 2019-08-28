@@ -102,7 +102,7 @@ module "aws-nomad_client" {
   aws_vpc_id           = "aws_vpc_id"
   availability_zone    = "aws_az_id"
   subnet_id            = "aws_subnet_id"
-  sg_ids               = [aws_security_group.allow_nomad_traffic_sg.id,aws_security_group.allow_nomad_icmp_traffic.id,aws_security_group.allow_nomad_ssh_traffic.id]
+  sg_ids               = [module.aws-nomad_security_groups.security_group_nomad_traffic,module.aws-nomad_security_groups.security_group_ssh_traffic,module.aws-nomad_security_groups.security_group_icmp_traffic]
   nomad_region         = "global"
   dc                   = "dc1"
   ami                  = "ami-02ffa51d963317aaf" # Nomad client AWS AMI in us-east-1
