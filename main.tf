@@ -71,50 +71,43 @@ resource "aws_instance" "nomad_instance" {
     nomad-node = var.instance_role
   }
 
-  connection {
-    host        = self.private_ip
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = file("~/.ssh/id_rsa")
-  }
+  user_data = << EOF
+		#!/usr/bin/env bash
+    
+    # create dir for nomad configuration
+    sudo mkdir -p /etc/nomad.d
+    sudo chmod 700 /etc/nomad.d
 
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p ~/nomad/ssl",
-    ]
-  }
+    # download and run nomad configuration script
+    curl -o /tmp/nomad-${var.instance_role}-config.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad_instance/master/scripts/nomad-${var.instance_role}-config.sh
+    chmod +x /tmp/nomad-${var.instance_role}-config.sh
+    sudo /tmp/nomad-${var.instance_role}-config.sh ${var.nomad_region} ${var.dc} ${var.authoritative_region} '${var.retry_join}' ${var.secure_gossip}
+    rm -rf /tmp/*
 
-  provisioner "file" {
-    source      = "${path.root}/ssl/nomad/${var.nomad_region}/"
-    destination = "nomad/ssl"
-  }
+    # create dir for certificates and copy cfssl.json configuration file to increase the default certificate expiration time for nomad
+    mkdir -p ~/nomad/ssl
+    curl -o ~/nomad/ssl/cfssl.json https://github.com/achuchulev/terraform-aws-nomad_instance/blob/master/config/cfssl.json
 
-  provisioner "file" {
-    source      = "${path.root}/config/cfssl.json"
-    destination = "/tmp/cfssl.json"
-  }
+    # download CA certificates
+    curl -o ~/nomad/ssl/nomad-ca-key.pem https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad_instance/master/ca_certs/nomad-ca-key.pem
+    curl -o ~/nomad/ssl/nomad-ca.csr https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad_instance/master/ca_certs/nomad-ca.csr
+    curl -o ~/nomad/ssl/nomad-ca.pem https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad_instance/master/ca_certs/nomad-ca.pem
 
-  provisioner "file" {
-    source      = "${path.root}/config/nomad.service"
-    destination = "/tmp/nomad.service"
-  }
+    # generate nomad node certificates
+    sudo echo '{}' | cfssl gencert -ca=nomad/ssl/nomad-ca.pem -ca-key=nomad/ssl/nomad-ca-key.pem -config=/tmp/cfssl.json -hostname='${var.instance_role}.${var.nomad_region}.nomad,localhost,127.0.0.1' - | cfssljson -bare nomad/ssl/${var.instance_role}
 
-  provisioner "file" {
-    source      = "${path.root}/scripts/aws/provision-${var.instance_role}.sh"
-    destination = "/tmp/provision.sh"
-  }
+    # copy nomad.service
+    sudo curl -o /etc/systemd/system/nomad.service https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad_instance/master/config/nomad.service
+    sudo echo '{}' | cfssl gencert -ca=nomad/ssl/nomad-ca.pem -ca-key=nomad/ssl/nomad-ca-key.pem -profile=client - | cfssljson -bare nomad/ssl/cli
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo echo '{}' | cfssl gencert -ca=nomad/ssl/nomad-ca.pem -ca-key=nomad/ssl/nomad-ca-key.pem -config=/tmp/cfssl.json -hostname='${var.instance_role}.${var.nomad_region}.nomad,localhost,127.0.0.1' - | cfssljson -bare nomad/ssl/${var.instance_role}",
-      "sudo echo '{}' | cfssl gencert -ca=nomad/ssl/nomad-ca.pem -ca-key=nomad/ssl/nomad-ca-key.pem -profile=client - | cfssljson -bare nomad/ssl/cli",
-      "sudo chmod +x /tmp/provision.sh",
-      "sudo /tmp/provision.sh ${var.nomad_region} ${var.dc} ${var.authoritative_region} '${var.retry_join}' ${var.secure_gossip}",
-      "sudo cp /tmp/nomad.service /etc/systemd/system",
-      "sudo systemctl enable nomad.service",
-      "sudo systemctl start nomad.service",
-      "sudo rm -rf /tmp/*",
-      "echo 'export NOMAD_ADDR=https://${var.domain_name}.${var.zone_name}' >> ~/.profile",
-    ]
-  }
+    # Enable Nomad's CLI command autocomplete support. Skip if installed
+    grep "complete -C /usr/bin/nomad nomad" ~/.bashrc &>/dev/null || nomad -autocomplete-install
+
+    # enable and start nomad service
+    sudo systemctl enable nomad.service
+		sudo systemctl start nomad.service
+
+    # export the URL of the Nomad agent
+    echo 'export NOMAD_ADDR=https://${var.domain_name}.${var.zone_name}' >> ~/.profile
+	EOF
 }
