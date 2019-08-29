@@ -70,5 +70,5 @@ resource "aws_instance" "nomad_instance" {
     nomad-node = var.instance_role
   }
 
-  user_data = templatefile("./templates/configuration.tmpl", { instance_role = var.instance_role, nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.domain_name, zone_name = var.zone_name })
+  user_data = templatefile("./templates/configuration.sh", { instance_role = var.instance_role, nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.domain_name, zone_name = var.zone_name })
 }
