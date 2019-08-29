@@ -1,4 +1,3 @@
-<<EOF
 #!/usr/bin/env bash
 
 # create dir for nomad configuration
@@ -36,5 +35,3 @@ grep "complete -C /usr/bin/nomad nomad" ~/.bashrc &>/dev/null || nomad -autocomp
 
 # export the URL of the Nomad agent
 echo 'export NOMAD_ADDR=https://${domain_name}.${zone_name}' >> ~/.profile
-
-EOF
