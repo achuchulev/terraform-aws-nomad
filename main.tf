@@ -120,7 +120,7 @@ resource "aws_instance" "nomad_server" {
     Name       = "${var.nomad_region}-${var.dc}-${random_pet.random_name.id}-server-0${count.index + 1}"
     nomad-node = "server"
   }
-
+  
   user_data = templatefile("${path.module}/templates/nomad-config.sh", { instance_role = "server", nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.subdomain_name, zone_name = var.cloudflare_zone })
 }
 

@@ -68,7 +68,7 @@ module "aws-nomad_security_groups" {
 
 // Module that creates Nomad server instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
 module "aws-nomad_server" {
-  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+  source = "git@github.com:achuchulev/terraform-aws-nomad.git"
 
   access_key           = "aws_access_key"
   secret_key           = "aws_secret_key"
@@ -92,7 +92,7 @@ module "aws-nomad_server" {
 
 // Module that creates Nomad client instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
 module "aws-nomad_client" {
-  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+  source = "git@github.com:achuchulev/terraform-aws-nomad.git"
 
   access_key           = "aws_access_key"
   secret_key           = "aws_secret_key"
@@ -102,7 +102,7 @@ module "aws-nomad_client" {
   aws_vpc_id           = "aws_vpc_id"
   availability_zone    = "aws_az_id"
   subnet_id            = "aws_subnet_id"
-  sg_ids               = [aws_security_group.allow_nomad_traffic_sg.id,aws_security_group.allow_nomad_icmp_traffic.id,aws_security_group.allow_nomad_ssh_traffic.id]
+  sg_ids               = [module.aws-nomad_security_groups.security_group_nomad_traffic,module.aws-nomad_security_groups.security_group_ssh_traffic,module.aws-nomad_security_groups.security_group_icmp_traffic]
   nomad_region         = "global"
   dc                   = "dc1"
   ami                  = "ami-02ffa51d963317aaf" # Nomad client AWS AMI in us-east-1
