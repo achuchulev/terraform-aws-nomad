@@ -60,22 +60,6 @@ resource "aws_security_group" "nomad_traffic" {
   description = "Allow traffic needed for Nomad"
   vpc_id      = var.aws_vpc_id
 
-  // Custom ICMP Rule - IPv4 Echo Reply
-  ingress {
-    from_port   = "0"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  // Custom ICMP Rule - IPv4 Echo Request
-  ingress {
-    from_port   = "8"
-    to_port     = "-1"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   // nomad
   ingress {
     from_port   = "4646"
@@ -212,8 +196,8 @@ resource "null_resource" "nginx_config" {
   # changes to any server instance of the nomad cluster requires re-provisioning
   triggers = {
     nginx_upstream_nodes = local.nomad_servers_socket
-    cloudflare_record_ip   = cloudflare_record.nomad_frontend[count.index].value
-    cloudflare_record_name = cloudflare_record.nomad_frontend[count.index].name
+    cloudflare_record_ip   = cloudflare_record.nomad_frontend[0].value
+    cloudflare_record_name = cloudflare_record.nomad_frontend[0].name
   }
 
   depends_on = [
@@ -253,7 +237,7 @@ resource "null_resource" "certbot" {
   count = var.ui_enabled == "true" ? 1 : 0
   # Changes to any instance of the cluster requires re-provisioning
   triggers = {
-    cloudflare_record = cloudflare_record.nomad_frontend[count.index].value
+    cloudflare_record = cloudflare_record.nomad_frontend[0].value
   }
 
   depends_on = [
@@ -264,7 +248,7 @@ resource "null_resource" "certbot" {
   # certbot script can run on every instance ip change
   connection {
     type        = "ssh"
-    host        = aws_instance.frontend[count.index].public_ip
+    host        = aws_instance.frontend[0].public_ip
     user        = "ubuntu"
     private_key = file("~/.ssh/id_rsa")
   }
