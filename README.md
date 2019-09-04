@@ -68,7 +68,7 @@ module "aws-nomad_security_groups" {
 
 // Module that creates Nomad server instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
 module "aws-nomad_server" {
-  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+  source = "git@github.com:achuchulev/terraform-aws-nomad.git"
 
   access_key           = "aws_access_key"
   secret_key           = "aws_secret_key"
@@ -92,7 +92,7 @@ module "aws-nomad_server" {
 
 // Module that creates Nomad client instances in AWS region "us-east-1", Nomad region "global" and Nomad "dc1"
 module "aws-nomad_client" {
-  source = "git@github.com:achuchulev/terraform-aws-nomad_instance.git"
+  source = "git@github.com:achuchulev/terraform-aws-nomad.git"
 
   access_key           = "aws_access_key"
   secret_key           = "aws_secret_key"
