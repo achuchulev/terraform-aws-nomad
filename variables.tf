@@ -7,38 +7,60 @@ variable "region" {
   default = "us-east-1"
 }
 
-// Nomad EC2 Instances VARs
-variable "nomad_instance_count" {
+// Number of Nomad server EC2 Instances
+variable "nomad_server_count" {
   default = "3"
 }
 
-variable "instance_role" {
-  description = "Nomad instance type"
-  default     = "server"
+// Number of Nomad client EC2 Instance
+variable "nomad_client_count" {
+  default = "1"
 }
 
-variable "public_key" {}
+variable "ui_enabled" {
+  description = "Set to false to prevent the frontend from creating thus accessing Nomad UI"
+  default     = "true"
+}
+
+variable "ssh_enabled" {
+  description = "Set to false to prevent ssh"
+  default     = "true"
+}
+
+variable "icmp_enabled" {
+  description = "Set to false to prevent icmp ping"
+  default     = "true"
+}
 
 variable "aws_vpc_id" {}
 
 variable "subnet_id" {}
 
-variable "instance_type" {
+variable "instance_type_server" {
   default = "t2.micro"
 }
 
-variable "ami" {
+variable "instance_type_client" {
+  default = "t2.micro"
+}
+
+variable "instance_type_frontend" {
+  default = "t2.micro"
+}
+
+variable "ami_nomad_server" {
   description = "Ubuntu Xenial Nomad Server AMI in AWS us-east-1 region"
   default     = "ami-0ac8c1373dae0f3e5"
 }
 
-variable "sg_ids" {
-   type    = list
+variable "ami_nomad_client" {
+  description = "Ubuntu Xenial Nomad Client AMI in AWS us-east-1 region"
+  default     = "ami-02ffa51d963317aaf"
 }
 
-variable "role_name" {
-  description = "Name for IAM role that allows Nomad cloud auto join"
-  default     = "nomad-cloud-auto-join-aws"
+variable "ami_frontend" {
+  description = "Ubuntu Xenial WEB Server AMI in AWS us-east-1 region"
+  default     = "ami-090c16342ee6bb5cc"
 }
 
 variable "dc" {
@@ -70,12 +92,22 @@ variable "secure_gossip" {
 }
 
 // Cloudflare VARs
-variable "zone_name" {
-  description = "The name of DNS domain"
-  default = "ntry.site"
+variable "cloudflare_email" {
+  description = "Used by Nomad frontend"
+  default     = "null"
 }
 
-variable "domain_name" {
-  description = "The name of subdomain"
-  default = "mynomad"
+variable "cloudflare_token" {
+  description = "Used by Nomad frontend"
+  default     = "null"
+}
+
+variable "cloudflare_zone" {
+  description = "Used by Nomad frontend"
+  default     = "null"
+}
+
+variable "subdomain_name" {
+  description = "Used by Nomad frontend"
+  default     = "null"
 }
