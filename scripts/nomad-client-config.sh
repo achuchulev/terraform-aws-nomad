@@ -1,4 +1,6 @@
-cat <<EOF > /etc/nomad.d/nomad.hcl
+#!/usr/bin/env bash
+
+cat <<EOF >/etc/nomad.d/nomad.hcl
 
 data_dir  = "/opt/nomad"
 
@@ -26,9 +28,9 @@ tls {
   http = true
   rpc  = true
 
-  ca_file   = "/home/ubuntu/nomad/ssl/nomad-ca.pem"
-  cert_file = "/home/ubuntu/nomad/ssl/client.pem"
-  key_file  = "/home/ubuntu/nomad/ssl/client-key.pem"
+  ca_file   = "/root/nomad/ssl/nomad-ca.pem"
+  cert_file = "/root/nomad/ssl/client.pem"
+  key_file  = "/root/nomad/ssl/client-key.pem"
 
   verify_server_hostname = true
   verify_https_client    = true
