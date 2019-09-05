@@ -7,6 +7,12 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "private_subnet_with_nat_gw" {
+  description = "Indicates whether Nomad nodes can reach Internet via its Private IP"
+  default     = "false"
+}
+
+
 // Number of Nomad server EC2 Instances
 variable "nomad_server_count" {
   default = "3"
@@ -22,14 +28,22 @@ variable "ui_enabled" {
   default     = "true"
 }
 
-variable "ssh_enabled" {
-  description = "Set to false to prevent ssh"
-  default     = "true"
+variable "ingress_tcp_ports_nomad" {
+  type        = list(number)
+  description = "The list of TCP ingress ports"
+  default     = [4646, 4647, 4648, 22]
 }
 
-variable "icmp_enabled" {
-  description = "Set to false to prevent icmp ping"
-  default     = "true"
+variable "ingress_udp_ports_nomad" {
+  type        = list(number)
+  description = "The list of UDP ingress ports"
+  default     = [4648]
+}
+
+variable "ingress_tcp_ports_frontend" {
+  type        = list(number)
+  description = "The list of TCP ingress ports"
+  default     = [80, 443, 22]
 }
 
 variable "aws_vpc_id" {}

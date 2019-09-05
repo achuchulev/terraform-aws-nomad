@@ -8,14 +8,14 @@ curl -o /root/nomad/ssl/nomad-ca.pem https://raw.githubusercontent.com/achuchule
 # issue nomad node certificates
 echo '{}' | cfssl gencert -ca=/root/nomad/ssl/nomad-ca.pem -ca-key=/root/nomad/ssl/nomad-ca-key.pem -profile=client - | cfssljson -bare /root/nomad/ssl/cli
 
+# download and run nomad configuration script
+curl -o /root/nginx-upstream-config.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/scripts/nginx-upstream-config.sh
+chmod +x /root/nginx-upstream-config.sh
+
 # download and run nginx configuration script
 curl -o /root/nginx.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/scripts/nginx.sh
 chmod +x /root/nginx.sh
 /root/nginx.sh ${nomad_region}
-
-# download and run nomad configuration script
-curl -o /root/nginx-upstream-config.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/scripts/nginx-upstream-config.sh
-chmod +x /root/nginx-upstream-config.sh
 
 # Create cron job to check and renew public certificate on expiration
 crontab <<EOF
