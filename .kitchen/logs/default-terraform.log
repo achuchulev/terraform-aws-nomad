@@ -1,0 +1,92 @@
+I, [2019-09-05T17:12:23.039908 #47106]  INFO -- default-terraform: -----> Destroying <default-terraform>...
+W, [2019-09-05T17:12:24.184243 #47106]  WARN -- default-terraform: Running command `terraform init -input=false -lock=true -lock-timeout=0s  -force-copy -backend=true  -get=true -get-plugins=true -verify-plugins=true` in directory /Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02
+I, [2019-09-05T17:12:24.337898 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:24.338096 #47106]  INFO -- default-terraform: [0m[1mInitializing the backend...[0m
+I, [2019-09-05T17:12:24.380483 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:24.380635 #47106]  INFO -- default-terraform: [0m[1mInitializing provider plugins...[0m
+I, [2019-09-05T17:12:25.107055 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:25.107297 #47106]  INFO -- default-terraform: The following providers do not have any version constraints in configuration,
+I, [2019-09-05T17:12:25.107346 #47106]  INFO -- default-terraform: so the latest version was installed.
+I, [2019-09-05T17:12:25.107384 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:25.107569 #47106]  INFO -- default-terraform: To prevent automatic upgrades to new major versions that may contain breaking
+I, [2019-09-05T17:12:25.107667 #47106]  INFO -- default-terraform: changes, it is recommended to add version = "..." constraints to the
+I, [2019-09-05T17:12:25.107980 #47106]  INFO -- default-terraform: corresponding provider blocks in configuration, with the constraint strings
+I, [2019-09-05T17:12:25.108024 #47106]  INFO -- default-terraform: suggested below.
+I, [2019-09-05T17:12:25.108328 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:25.108364 #47106]  INFO -- default-terraform: * provider.aws: version = "~> 2.26"
+I, [2019-09-05T17:12:25.108402 #47106]  INFO -- default-terraform: * provider.cloudflare: version = "~> 1.18"
+I, [2019-09-05T17:12:25.108697 #47106]  INFO -- default-terraform: * provider.null: version = "~> 2.1"
+I, [2019-09-05T17:12:25.108742 #47106]  INFO -- default-terraform: * provider.random: version = "~> 2.2"
+I, [2019-09-05T17:12:25.108779 #47106]  INFO -- default-terraform: 
+I, [2019-09-05T17:12:25.108813 #47106]  INFO -- default-terraform: [0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+W, [2019-09-05T17:12:25.121687 #47106]  WARN -- default-terraform: Running command `terraform workspace select kitchen-terraform-default-terraform` in directory /Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02
+W, [2019-09-05T17:12:25.189976 #47106]  WARN -- default-terraform: Running command `terraform destroy -auto-approve -lock=true -lock-timeout=0s -input=false  -parallelism=10 -refresh=true  -var-file="/Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02/terraform.tfvars"` in directory /Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02
+I, [2019-09-05T17:12:27.417179 #47106]  INFO -- default-terraform: [0m[1mrandom_pet.random_name: Refreshing state... [id=initially-inherently-welcome-gorilla][0m
+I, [2019-09-05T17:12:30.821272 #47106]  INFO -- default-terraform: [0m[1maws_key_pair.my_key: Refreshing state... [id=key-initially-inherently-welcome-gorilla][0m
+I, [2019-09-05T17:12:30.822273 #47106]  INFO -- default-terraform: [0m[1maws_security_group.frontend[0]: Refreshing state... [id=sg-0071ae4a5bf72d881][0m
+I, [2019-09-05T17:12:30.822666 #47106]  INFO -- default-terraform: [0m[1mdata.aws_iam_policy_document.nomad: Refreshing state...[0m
+I, [2019-09-05T17:12:30.825116 #47106]  INFO -- default-terraform: [0m[1mdata.aws_iam_policy_document.assume_role: Refreshing state...[0m
+I, [2019-09-05T17:12:30.826335 #47106]  INFO -- default-terraform: [0m[1maws_security_group.nomad: Refreshing state... [id=sg-0c6aeb4d094cbc247][0m
+I, [2019-09-05T17:12:30.829562 #47106]  INFO -- default-terraform: [0m[1maws_iam_role.nomad: Refreshing state... [id=global-dc1-nomad-cloud-auto-join-aws][0m
+I, [2019-09-05T17:12:31.454499 #47106]  INFO -- default-terraform: [0m[1maws_iam_role_policy.nomad: Refreshing state... [id=global-dc1-nomad-cloud-auto-join-aws:global-dc1-nomad-cloud-auto-join-aws][0m
+I, [2019-09-05T17:12:31.454743 #47106]  INFO -- default-terraform: [0m[1maws_iam_instance_profile.nomad: Refreshing state... [id=global-dc1-nomad-cloud-auto-join-aws][0m
+I, [2019-09-05T17:12:31.521459 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Refreshing state... [id=i-05e3529a6ecad0c58][0m
+I, [2019-09-05T17:12:32.045343 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Refreshing state... [id=i-011f5a7ed832d69d2][0m
+I, [2019-09-05T17:12:32.046213 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Refreshing state... [id=i-0c4d51f220915c3e5][0m
+I, [2019-09-05T17:12:32.050894 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Refreshing state... [id=i-0eeb2e9989d49b182][0m
+I, [2019-09-05T17:12:32.053011 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Refreshing state... [id=i-0bb3f1038525cbfb7][0m
+I, [2019-09-05T17:12:37.948116 #47106]  INFO -- default-terraform: [0m[1mcloudflare_record.nomad_frontend[0]: Refreshing state... [id=63c00da65ef5cbe1382ba6ab4d387cf2][0m
+I, [2019-09-05T17:12:38.467983 #47106]  INFO -- default-terraform: [0m[1mnull_resource.nginx_config[0]: Refreshing state... [id=8655861495847086443][0m
+I, [2019-09-05T17:12:38.470048 #47106]  INFO -- default-terraform: [0m[1mnull_resource.certbot[0]: Refreshing state... [id=7348583469723476250][0m
+I, [2019-09-05T17:12:39.199351 #47106]  INFO -- default-terraform: [0m[1mnull_resource.certbot[0]: Destroying... [id=7348583469723476250][0m[0m
+I, [2019-09-05T17:12:39.201242 #47106]  INFO -- default-terraform: [0m[1mnull_resource.certbot[0]: Destruction complete after 0s[0m[0m
+I, [2019-09-05T17:12:39.230953 #47106]  INFO -- default-terraform: [0m[1mnull_resource.nginx_config[0]: Destroying... [id=8655861495847086443][0m[0m
+I, [2019-09-05T17:12:39.231654 #47106]  INFO -- default-terraform: [0m[1mnull_resource.nginx_config[0]: Destruction complete after 0s[0m[0m
+I, [2019-09-05T17:12:39.243086 #47106]  INFO -- default-terraform: [0m[1mcloudflare_record.nomad_frontend[0]: Destroying... [id=63c00da65ef5cbe1382ba6ab4d387cf2][0m[0m
+I, [2019-09-05T17:12:39.685942 #47106]  INFO -- default-terraform: [0m[1mcloudflare_record.nomad_frontend[0]: Destruction complete after 1s[0m[0m
+I, [2019-09-05T17:12:41.787252 #47106]  INFO -- default-terraform: [0m[1maws_iam_role_policy.nomad: Destroying... [id=global-dc1-nomad-cloud-auto-join-aws:global-dc1-nomad-cloud-auto-join-aws][0m[0m
+I, [2019-09-05T17:12:41.798847 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Destroying... [id=i-0eeb2e9989d49b182][0m[0m
+I, [2019-09-05T17:12:41.798924 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Destroying... [id=i-0bb3f1038525cbfb7][0m[0m
+I, [2019-09-05T17:12:41.798969 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Destroying... [id=i-011f5a7ed832d69d2][0m[0m
+I, [2019-09-05T17:12:41.800081 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Destroying... [id=i-05e3529a6ecad0c58][0m[0m
+I, [2019-09-05T17:12:41.801398 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Destroying... [id=i-0c4d51f220915c3e5][0m[0m
+I, [2019-09-05T17:12:42.479833 #47106]  INFO -- default-terraform: [0m[1maws_iam_role_policy.nomad: Destruction complete after 0s[0m[0m
+I, [2019-09-05T17:12:51.799737 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Still destroying... [id=i-0eeb2e9989d49b182, 10s elapsed][0m[0m
+I, [2019-09-05T17:12:51.800192 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Still destroying... [id=i-0bb3f1038525cbfb7, 10s elapsed][0m[0m
+I, [2019-09-05T17:12:51.800246 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Still destroying... [id=i-05e3529a6ecad0c58, 10s elapsed][0m[0m
+I, [2019-09-05T17:12:51.803774 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Still destroying... [id=i-011f5a7ed832d69d2, 10s elapsed][0m[0m
+I, [2019-09-05T17:12:51.804191 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Still destroying... [id=i-0c4d51f220915c3e5, 10s elapsed][0m[0m
+I, [2019-09-05T17:13:01.804220 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Still destroying... [id=i-05e3529a6ecad0c58, 20s elapsed][0m[0m
+I, [2019-09-05T17:13:01.804764 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Still destroying... [id=i-0bb3f1038525cbfb7, 20s elapsed][0m[0m
+I, [2019-09-05T17:13:01.804846 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Still destroying... [id=i-0c4d51f220915c3e5, 20s elapsed][0m[0m
+I, [2019-09-05T17:13:01.805001 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Still destroying... [id=i-0eeb2e9989d49b182, 20s elapsed][0m[0m
+I, [2019-09-05T17:13:01.805304 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Still destroying... [id=i-011f5a7ed832d69d2, 20s elapsed][0m[0m
+I, [2019-09-05T17:13:11.804845 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Still destroying... [id=i-05e3529a6ecad0c58, 30s elapsed][0m[0m
+I, [2019-09-05T17:13:11.805290 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Still destroying... [id=i-0c4d51f220915c3e5, 30s elapsed][0m[0m
+I, [2019-09-05T17:13:11.805579 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Still destroying... [id=i-011f5a7ed832d69d2, 30s elapsed][0m[0m
+I, [2019-09-05T17:13:11.805638 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Still destroying... [id=i-0eeb2e9989d49b182, 30s elapsed][0m[0m
+I, [2019-09-05T17:13:11.807870 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Still destroying... [id=i-0bb3f1038525cbfb7, 30s elapsed][0m[0m
+I, [2019-09-05T17:13:14.701331 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_client[0]: Destruction complete after 33s[0m[0m
+I, [2019-09-05T17:13:14.701773 #47106]  INFO -- default-terraform: [0m[1maws_instance.frontend[0]: Destruction complete after 33s[0m[0m
+I, [2019-09-05T17:13:14.831327 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[0]: Destruction complete after 33s[0m[0m
+I, [2019-09-05T17:13:14.832102 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[2]: Destruction complete after 33s[0m[0m
+I, [2019-09-05T17:13:14.832182 #47106]  INFO -- default-terraform: [0m[1maws_instance.nomad_server[1]: Destruction complete after 33s[0m[0m
+I, [2019-09-05T17:13:14.843885 #47106]  INFO -- default-terraform: [0m[1maws_security_group.frontend[0]: Destroying... [id=sg-0071ae4a5bf72d881][0m[0m
+I, [2019-09-05T17:13:14.857285 #47106]  INFO -- default-terraform: [0m[1maws_key_pair.my_key: Destroying... [id=key-initially-inherently-welcome-gorilla][0m[0m
+I, [2019-09-05T17:13:14.857643 #47106]  INFO -- default-terraform: [0m[1maws_iam_instance_profile.nomad: Destroying... [id=global-dc1-nomad-cloud-auto-join-aws][0m[0m
+I, [2019-09-05T17:13:14.860234 #47106]  INFO -- default-terraform: [0m[1maws_security_group.nomad: Destroying... [id=sg-0c6aeb4d094cbc247][0m[0m
+I, [2019-09-05T17:13:15.617023 #47106]  INFO -- default-terraform: [0m[1maws_key_pair.my_key: Destruction complete after 1s[0m[0m
+I, [2019-09-05T17:13:15.632035 #47106]  INFO -- default-terraform: [0m[1mrandom_pet.random_name: Destroying... [id=initially-inherently-welcome-gorilla][0m[0m
+I, [2019-09-05T17:13:15.632960 #47106]  INFO -- default-terraform: [0m[1mrandom_pet.random_name: Destruction complete after 0s[0m[0m
+I, [2019-09-05T17:13:16.246504 #47106]  INFO -- default-terraform: [0m[1maws_iam_instance_profile.nomad: Destruction complete after 1s[0m[0m
+I, [2019-09-05T17:13:16.261578 #47106]  INFO -- default-terraform: [0m[1maws_iam_role.nomad: Destroying... [id=global-dc1-nomad-cloud-auto-join-aws][0m[0m
+I, [2019-09-05T17:13:16.358863 #47106]  INFO -- default-terraform: [0m[1maws_security_group.frontend[0]: Destruction complete after 1s[0m[0m
+I, [2019-09-05T17:13:16.367012 #47106]  INFO -- default-terraform: [0m[1maws_security_group.nomad: Destruction complete after 1s[0m[0m
+I, [2019-09-05T17:13:17.580481 #47106]  INFO -- default-terraform: [0m[1maws_iam_role.nomad: Destruction complete after 2s[0m[0m
+I, [2019-09-05T17:13:17.634010 #47106]  INFO -- default-terraform: [0m[1m[32m
+I, [2019-09-05T17:13:17.634937 #47106]  INFO -- default-terraform: Destroy complete! Resources: 15 destroyed.[0m
+W, [2019-09-05T17:13:17.658180 #47106]  WARN -- default-terraform: Running command `terraform workspace select default` in directory /Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02
+I, [2019-09-05T17:13:17.732585 #47106]  INFO -- default-terraform: [0m[32mSwitched to workspace "default".[0m
+W, [2019-09-05T17:13:17.745903 #47106]  WARN -- default-terraform: Running command `terraform workspace delete kitchen-terraform-default-terraform` in directory /Users/achuchulev/Downloads/terraform-aws-nomad.v0.12-02
+I, [2019-09-05T17:13:17.798985 #47106]  INFO -- default-terraform: [0m[32mDeleted workspace "kitchen-terraform-default-terraform"![0m
+I, [2019-09-05T17:13:17.820136 #47106]  INFO -- default-terraform: Finished destroying <default-terraform> (0m54.77s).

@@ -11,5 +11,5 @@ output "frontend_public_ip" {
 }
 
 output "ui_url" {
-  value = "https://${var.subdomain_name}.${var.cloudflare_zone}"
+  value = var.ui_enabled == "true" ? "https://${var.subdomain_name}.${var.cloudflare_zone}" : "Nomad UI is not enabled!"
 }
