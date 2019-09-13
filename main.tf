@@ -116,7 +116,7 @@ resource "aws_instance" "nomad_server" {
   count                       = var.nomad_server_count
   ami                         = var.ami_nomad_server
   instance_type               = var.instance_type_server
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.server_subnet_id
   vpc_security_group_ids      = [aws_security_group.nomad.id]
   iam_instance_profile        = aws_iam_instance_profile.nomad.id
   key_name                    = aws_key_pair.my_key.id
@@ -135,7 +135,7 @@ resource "aws_instance" "nomad_client" {
   count                       = var.nomad_client_count
   ami                         = var.ami_nomad_client
   instance_type               = var.instance_type_client
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.client_subnet_id
   vpc_security_group_ids      = [aws_security_group.nomad.id]
   iam_instance_profile        = aws_iam_instance_profile.nomad.id
   key_name                    = aws_key_pair.my_key.id
@@ -193,7 +193,7 @@ resource "aws_instance" "frontend" {
   count                       = var.ui_enabled == "true" ? 1 : 0
   ami                         = var.ami_frontend
   instance_type               = var.instance_type_frontend
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.frontend_subnet_id
   vpc_security_group_ids      = [aws_security_group.frontend[0].id]
   key_name                    = aws_key_pair.my_key.id
   associate_public_ip_address = "true"
