@@ -48,7 +48,11 @@ variable "ingress_tcp_ports_frontend" {
 
 variable "aws_vpc_id" {}
 
-variable "subnet_id" {}
+variable "server_subnet_id" {}
+
+variable "client_subnet_id" {}
+
+variable "frontend_subnet_id" {}
 
 variable "instance_type_server" {
   default = "t2.micro"
