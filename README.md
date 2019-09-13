@@ -21,16 +21,15 @@
 
 
 ```
-
-access_key        = "your_aws_access_key"
-secret_key        = "your_aws_secret_key"
-aws_vpc_id        = "vpc_id"
-subnet_id         = "subnet_id_"
-secure_gossip     = "1/+0vQt75rYWJadtpEdEtg=="
-cloudflare_email  = "me@example.com"
-cloudflare_token  = "cloudflare_token"
-cloudflare_zone   = "example.net"
-subdomain_name    = "nomad-ui"
+access_key         = "your_aws_access_key"
+secret_key         = "your_aws_secret_key"
+aws_vpc_id         = "vpc_id"
+subnet_id          = "subnet_id"
+secure_gossip      = "1/+0vQt75rYWJadtpEdEtg=="
+cloudflare_email   = "me@example.com"
+cloudflare_token   = "cloudflare_token"
+cloudflare_zone    = "example.net"
+subdomain_name     = "nomad-ui"
 ```
 
 - Create `variables.tf` file
@@ -64,7 +63,9 @@ variable "subdomain_name" {}
 | ingress_udp_ports_nomad | The list of UDP ingress ports for Nomad | list(number) | `[4648]` | no
 | ingress_tcp_ports_frontend | The list of TCP ingress ports for Frontend | list(number) | `[80, 443, 22]` | no
 | aws_vpc_id | AWS VPC id | string | - | yes
-| subnet_id | AWS VPC subnet id | string | - | yes
+| server_subnet_id | AWS VPC subnet id for Nomad servers | string | - | yes
+| client_subnet_id | AWS VPC subnet id for Nomad clients | string | - | yes
+| frontend_subnet_id | AWS VPC subnet id for Nomad frontend | string | - | yes
 | ami_nomad_server | Ubuntu Xenial Nomad server AWS AMI in AWS `us-east-1` region | string | `ami-0ac8c1373dae0f3e5` | no
 | ami_nomad_client | Ubuntu Xenial Nomad client AWS AMI in AWS `us-east-1` region | string | `ami-02ffa51d963317aaf` | no
 | ami_frontend | Ubuntu Xenial WEB Server AMI in AWS `us-east-1` region | string | `ami-090c16342ee6bb5cc` | no
@@ -88,7 +89,9 @@ module "nomad_cluster_on_aws" {
   access_key                 = var.access_key
   secret_key                 = var.secret_key
   aws_vpc_id                 = var.aws_vpc_id
-  subnet_id                  = var.subnet_id
+  server_subnet_id           = var.subnet_id
+  client_subnet_id           = var.subnet_id
+  frontend_subnet_id         = var.subnet_id
   secure_gossip              = var.secure_gossip
   cloudflare_email           = var.cloudflare_email
   cloudflare_token           = var.cloudflare_token
