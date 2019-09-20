@@ -127,7 +127,7 @@ resource "aws_instance" "nomad_server" {
     nomad-node = "server"
   }
 
-  user_data = templatefile("${path.module}/templates/nomad-config.sh", { instance_role = "server", nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.subdomain_name, zone_name = var.cloudflare_zone })
+  user_data = templatefile("${path.module}/templates/nomad-config.tpl", { instance_role = "server", nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.subdomain_name, zone_name = var.cloudflare_zone })
 }
 
 // Creates AWS EC2 instances for nomad client
@@ -146,7 +146,7 @@ resource "aws_instance" "nomad_client" {
     nomad-node = "client"
   }
 
-  user_data = templatefile("${path.module}/templates/nomad-config.sh", { instance_role = "client", nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.subdomain_name, zone_name = var.cloudflare_zone })
+  user_data = templatefile("${path.module}/templates/nomad-config.tpl", { instance_role = "client", nomad_region = var.nomad_region, dc = var.dc, authoritative_region = var.authoritative_region, retry_join = var.retry_join, secure_gossip = var.secure_gossip, domain_name = var.subdomain_name, zone_name = var.cloudflare_zone })
 }
 
 // Frontend config
@@ -202,7 +202,7 @@ resource "aws_instance" "frontend" {
     Name = "${var.nomad_region}-${var.dc}-${random_pet.random_name.id}-frontend"
   }
 
-  user_data = templatefile("${path.module}/templates/nginx-config.sh", { nomad_region = var.nomad_region })
+  user_data = templatefile("${path.module}/templates/nginx-config.tpl", { nomad_region = var.nomad_region })
 }
 
 // This makes the nginx configuration 
