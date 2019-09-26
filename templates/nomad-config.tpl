@@ -5,7 +5,11 @@ mkdir -p /etc/nomad.d
 chmod 700 /etc/nomad.d
 
 # download and run nomad configuration script
-curl -o /tmp/nomad-${instance_role}-config.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/scripts/nomad-${instance_role}-config.sh
+while [ ! -f /tmp/nomad-${instance_role}-config.sh ]; do 
+    curl -o /tmp/nomad-${instance_role}-config.sh https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/scripts/nomad-${instance_role}-config.sh;
+    sleep 3;
+done
+
 chmod +x /tmp/nomad-${instance_role}-config.sh
 /tmp/nomad-${instance_role}-config.sh ${nomad_region} ${dc} ${authoritative_region} '${retry_join}' ${secure_gossip}
 rm -rf /tmp/*
@@ -21,7 +25,10 @@ echo '{}' | cfssl gencert -ca=/root/nomad/ssl/nomad-ca.pem -ca-key=/root/nomad/s
 echo '{}' | cfssl gencert -ca=/root/nomad/ssl/nomad-ca.pem -ca-key=/root/nomad/ssl/nomad-ca-key.pem -profile=client - | cfssljson -bare /root/nomad/ssl/cli
 
 # copy nomad.service
-curl -o /etc/systemd/system/nomad.service https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/config/nomad.service
+while [ ! -f /etc/systemd/system/nomad.service ]; do 
+    curl -o /etc/systemd/system/nomad.service https://raw.githubusercontent.com/achuchulev/terraform-aws-nomad/master/config/nomad.service;
+    sleep 3;
+done
 
 # enable and start nomad service
 systemctl enable nomad.service
