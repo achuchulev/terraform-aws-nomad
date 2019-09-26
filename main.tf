@@ -232,7 +232,7 @@ resource "null_resource" "nginx_config" {
   provisioner "remote-exec" {
     # script called with private_ips of nomad backend servers
     inline = [
-      "sleep 5",
+      "sleep 10",
       "sudo /root/nginx-upstream-config.sh '${local.nomad_servers_socket}'",
       "sudo systemctl restart nginx.service"
     ]
